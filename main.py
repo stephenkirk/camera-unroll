@@ -36,7 +36,12 @@ def shot_with_iphone(image_exif):
 
 def is_normal_camera(image_exif):
     """Is this image shot with an iPhone, but not with VSCO?"""
- 
+
+def extract_tag(image_exif):
+    split_comment = image_exif['UserComment'].decode("utf-8").split(" ")
+    tags.append(split_comment[split_comment.index("preset")-1].upper())
+    
+
 FOLDER_PATH = os.path.expanduser("~/Pictures/Phone/")
 IMAGE_FILE_NAMES = [f for f in os.listdir(FOLDER_PATH) if os.path.isfile(FOLDER_PATH + f)]
 
@@ -56,3 +61,7 @@ if file_type == 'Image':
     if k in ExifTags.TAGS
     }
 
+    if is_vsco(exif): 
+        tags.append("VSCO")
+        tags.append(extract_tag(exif))
+        
