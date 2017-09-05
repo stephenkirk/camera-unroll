@@ -3,6 +3,16 @@ import os
 from PIL import Image
 from PIL import ExifTags
 
+# Example images
+ex_compressed_meme = "IMG_3940 1.JPG"
+ex_glitche = "IMG_3932.JPG"
+ex_screenshot = "IMG_3931.PNG"
+ex_snapchat_screenshot = "IMG_3922.PNG"
+ex_snapchat_video = "RHYH3563.MP4"
+ex_snapchat_image = "IMG_3903.JPG"
+ex_regular_video = "IMG_3217.MOV"
+ex_vsco = "JWBO4754.JPG"
+
 def get_file_format(file_name):
     """Returns the type of file."""
     extension = file_name.lower().split('.')[-1]
