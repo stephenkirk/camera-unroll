@@ -40,13 +40,16 @@ def is_normal_camera(image_exif):
 FOLDER_PATH = os.path.expanduser("~/Pictures/Phone/")
 IMAGE_FILE_NAMES = [f for f in os.listdir(FOLDER_PATH) if os.path.isfile(FOLDER_PATH + f)]
 
-file_name = IMAGE_FILE_NAMES[1]
-image_path = FOLDER_PATH + file_name
+file_name = ex_vsco
+file_path = FOLDER_PATH + file_name
 
-image_file_format = get_file_format(image_path)
+file_type = get_file_format(file_path)
 
-if image_file_format == 'Image':
-    image = Image.open(image_path)
+tags = []
+
+if file_type == 'Image':
+    tags.append("Image")
+    image = Image.open(file_path)
     exif = {
     ExifTags.TAGS[k]: v
     for k, v in image._getexif().items()
