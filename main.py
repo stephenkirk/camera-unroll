@@ -2,10 +2,11 @@
 import os
 from PIL import Image
 from PIL import ExifTags
+import numpy as np
 
 # Constants
 FOLDER_PATH = os.path.expanduser("~/Pictures/Phone/")
-IMAGE_FILE_NAMES = [f for f in os.listdir(FOLDER_PATH) if os.path.isfile(FOLDER_PATH + f)]
+FILE_NAMES = [f for f in os.listdir(FOLDER_PATH) if os.path.isfile(FOLDER_PATH + f)]
 
 # Example images
 ex_compressed_meme = "IMG_3940 1.JPG"
@@ -24,11 +25,11 @@ def get_file_format(file_name):
     image_extensions = ['jpg', 'png', 'gif']
     video_extensions = ['mp3', 'mp4', 'mov', 'aae']
     if extension in image_extensions:
-        return "Image"
+        return "Image", extension
     elif extension in video_extensions:
-        return "Video"
+        return "Video", extension
     else:
-        return "Other"
+        return "Other", extension
 
 
 def is_vsco(image_exif):
@@ -45,35 +46,48 @@ def shot_with_iphone(image_exif):
 
 def is_normal_camera(image_exif):
     """Is this image shot with an iPhone, but not with VSCO?"""
+    return shot_with_iphone(image_exif) and not is_vsco(image_exif)
 
 
-def extract_tag(image_exif):
-    split_comment = image_exif['UserComment'].decode("utf-8").split(" ")
-    tags.append(split_comment[split_comment.index("preset")-1].upper())
+def extract_vsco_filter(image_exif):
+    try:
+        split_comment = image_exif['UserComment'].decode("utf-8").split(" ")
+        return split_comment[split_comment.index("preset")-1].upper() # Index before 'preset' is filter name
+    except:
+        return None
+
+
+def get_image_exif(image):
+    exif = {
+        ExifTags.TAGS[k]: v
+        for k, v in image._getexif().items()
+        if k in ExifTags.TAGS
+    }
+    return exif
 
 
 def get_tags_for_file(file_name):
-    file_path = FOLDER_PATH + file_name
-    file_type = get_file_format(file_path)
-
-    tags = []
-
-    if file_type == 'Image':
-        tags.append("Image")
-        image = Image.open(file_path)
-        exif = {
-            ExifTags.TAGS[k]: v
-            for k, v in image._getexif().items()
-            if k in ExifTags.TAGS
-        }
-        if is_vsco(exif):
-            tags.append("VSCO")
-            tags.append(extract_tag(exif))
-
-
+    file_type = get_file_format(file_name)
+    tags = list()
+    tags.append(file_type[0])
+    if file_type[0] == 'Image':
+        image = Image.open(file_name)
+        if file_type[1] == 'jpg':
+            exif = get_image_exif(image)
+            if is_vsco(exif):
+                tags.append("VSCO")
+                tags.append(extract_vsco_filter(exif))
     return tags
 
+tag_dict = dict()
+num_files = enumerate(FILE_NAMES)
 
-# file_name = ex_vsco
+for index, file_name in num_files:
+    full_file_path = FOLDER_PATH + file_name
+    tags = get_tags_for_file(full_file_path)
+    tag_dict[file_name] = tags
+    print('Scanning image ' + str(index) + '/' + str(len(FILE_NAMES)))
 
-get_tags_for_file(file_name=ex_snapchat_image)
+x = list(tag_dict.values())
+x = [item for sublist in x for item in sublist]
+np.unique(x)
