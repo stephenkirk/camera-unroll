@@ -42,8 +42,10 @@ def is_vsco(image_exif):
 
 def shot_with_iphone(image_exif):
     """Is this image shot with iPhone?"""
-    if 'iPhone' in image_exif['LensModel']:
-        return True
+    try:
+        return 'iPhone' in image_exif['LensModel']
+    except:
+        return False
 
 
 def is_normal_camera(image_exif):
@@ -58,6 +60,14 @@ def extract_vsco_filter(image_exif):
     except:
         return None
 
+
+def is_snapchat(image_exif):
+    try:
+        return (not is_normal_camera(image_exif)) & \
+                image_exif['ExifImageHeight'] in (1920, 1080) & \
+                image_exif['ExifImageWidth'] in (1920, 1080)
+    except:
+        return False
 
 def is_screenshot(image):
     screenshot_resolutions = (1242, 2208), (2208, 1242), \
@@ -76,6 +86,8 @@ def get_image_exif(image):
     }
     return exif
 
+def get_full_path(image_path):
+    return FOLDER_PATH + image_path
 
 def get_tags_for_file(file_name):
     file_type = get_file_format(file_name)
@@ -88,18 +100,18 @@ def get_tags_for_file(file_name):
             if is_vsco(exif):
                 tags.append("VSCO")
                 tags.append(extract_vsco_filter(exif))
+            if is_snapchat(exif):
+                tags.append("Snapchat")
         elif file_type[1] == 'png':
             if is_screenshot(image): tags.append('Screenshot')
     return tags
 
-
+#
 # tag_dict = dict()
-# num_files = enumerate(FILE_NAMES)
-
+# num_files = enumerate(FILE_NAMES[0:4999])
+#
 # for index, file_name in num_files:
 #    full_file_path = FOLDER_PATH + file_name
 #    tags = get_tags_for_file(full_file_path)
 #    tag_dict[file_name] = tags
 #    print('Scanning image ' + str(index) + '/' + str(len(FILE_NAMES)))
-
-get_tags_for_file(FOLDER_PATH + ex_screenshot)
