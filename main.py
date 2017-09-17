@@ -34,8 +34,10 @@ def get_file_format(file_name):
 
 def is_vsco(image_exif):
     """Is this image taken with VSCO Cam?"""
-    try: return image_exif['Software'] == 'VSCO'
-    except: return False
+    try:
+        return image_exif['Software'] == 'VSCO'
+    except:
+        return False
 
 
 def shot_with_iphone(image_exif):
@@ -52,9 +54,10 @@ def is_normal_camera(image_exif):
 def extract_vsco_filter(image_exif):
     try:
         split_comment = image_exif['UserComment'].decode("utf-8").split(" ")
-        return split_comment[split_comment.index("preset")-1].upper() # Index before 'preset' is filter name
+        return split_comment[split_comment.index("preset") - 1].upper()  # Index before 'preset' is filter name
     except:
         return None
+
 
 def is_screenshot(image):
     screenshot_resolutions = (1242, 2208), (2208, 1242), \
@@ -62,8 +65,7 @@ def is_screenshot(image):
                              (640, 1136), (1136, 640), \
                              (640, 960), (960, 640)
 
-    return(image.size in screenshot_resolutions)
-
+    return image.size in screenshot_resolutions
 
 
 def get_image_exif(image):
@@ -90,10 +92,11 @@ def get_tags_for_file(file_name):
             if is_screenshot(image): tags.append('Screenshot')
     return tags
 
+
 # tag_dict = dict()
 # num_files = enumerate(FILE_NAMES)
 
-#for index, file_name in num_files:
+# for index, file_name in num_files:
 #    full_file_path = FOLDER_PATH + file_name
 #    tags = get_tags_for_file(full_file_path)
 #    tag_dict[file_name] = tags
