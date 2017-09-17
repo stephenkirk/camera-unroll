@@ -56,6 +56,15 @@ def extract_vsco_filter(image_exif):
     except:
         return None
 
+def is_screenshot(image):
+    screenshot_resolutions = (1242, 2208), (2208, 1242), \
+                             (750, 1334), (1334, 750), \
+                             (640, 1136), (1136, 640), \
+                             (640, 960), (960, 640)
+
+    return(image.size in screenshot_resolutions)
+
+
 
 def get_image_exif(image):
     exif = {
@@ -77,17 +86,17 @@ def get_tags_for_file(file_name):
             if is_vsco(exif):
                 tags.append("VSCO")
                 tags.append(extract_vsco_filter(exif))
+        elif file_type[1] == 'png':
+            if is_screenshot(image): tags.append('Screenshot')
     return tags
 
-tag_dict = dict()
-num_files = enumerate(FILE_NAMES)
+# tag_dict = dict()
+# num_files = enumerate(FILE_NAMES)
 
-for index, file_name in num_files:
-    full_file_path = FOLDER_PATH + file_name
-    tags = get_tags_for_file(full_file_path)
-    tag_dict[file_name] = tags
-    print('Scanning image ' + str(index) + '/' + str(len(FILE_NAMES)))
+#for index, file_name in num_files:
+#    full_file_path = FOLDER_PATH + file_name
+#    tags = get_tags_for_file(full_file_path)
+#    tag_dict[file_name] = tags
+#    print('Scanning image ' + str(index) + '/' + str(len(FILE_NAMES)))
 
-x = list(tag_dict.values())
-x = [item for sublist in x for item in sublist]
-np.unique(x)
+get_tags_for_file(FOLDER_PATH + ex_screenshot)
