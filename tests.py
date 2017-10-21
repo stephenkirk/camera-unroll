@@ -1,7 +1,7 @@
 from main import *
 
 assert get_tags_for_file(get_full_path(ex_screenshot)) == ['Image', 'Screenshot']
-# assert get_tags_for_file(get_full_path(ex_snapchat_screenshot)) == ['Image', 'Screenshot', 'Snapchat']
+assert get_tags_for_file(get_full_path(ex_snapchat_screenshot)) == ['Image', 'Screenshot', 'Snapchat']
 
 get_tags_for_file(get_full_path(ex_snapchat_image))
 get_tags_for_file(get_full_path(ex_glitche))

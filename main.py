@@ -1,7 +1,9 @@
-"""aaah"""
+""" Requires https://mediaarea.net/en/MediaInfo/Download/Mac_OS """
 import os
 from PIL import Image
 from PIL import ExifTags
+from subprocess import call
+import re
 import numpy as np
 
 # Constants
@@ -78,6 +80,7 @@ def is_screenshot(image):
     return image.size in screenshot_resolutions
 
 
+
 def get_image_exif(image):
     exif = {
         ExifTags.TAGS[k]: v
@@ -106,12 +109,19 @@ def get_tags_for_file(file_name):
             if is_screenshot(image): tags.append('Screenshot')
     return tags
 
-#
-# tag_dict = dict()
-# num_files = enumerate(FILE_NAMES[0:4999])
+
+
+x = call(['mediainfo', get_full_path(ex_snapchat_video)])
+class(x)
+re.search("Compression", x)
+
+
+
+tag_dict = dict()
+num_files = enumerate(FILE_NAMES[0:4999])
 #
 # for index, file_name in num_files:
-#    full_file_path = FOLDER_PATH + file_name
-#    tags = get_tags_for_file(full_file_path)
-#    tag_dict[file_name] = tags
-#    print('Scanning image ' + str(index) + '/' + str(len(FILE_NAMES)))
+#     full_file_path = FOLDER_PATH + file_name
+#     tags = get_tags_for_file(full_file_path)
+#     tag_dict[file_name] = tags
+#     print('Scanning image ' + str(index) + '/' + str(len(FILE_NAMES)))
