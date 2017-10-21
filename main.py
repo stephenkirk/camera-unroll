@@ -2,7 +2,7 @@
 import os
 from PIL import Image
 from PIL import ExifTags
-from subprocess import call
+import subprocess
 import re
 import numpy as np
 
@@ -110,10 +110,12 @@ def get_tags_for_file(file_name):
     return tags
 
 
+mediainfo = subprocess.Popen(['mediainfo', get_full_path(ex_snapchat_video)],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
 
-x = call(['mediainfo', get_full_path(ex_snapchat_video)])
-class(x)
-re.search("Compression", x)
+# TODO: Insert this into a array or hashmap, so we can access values such as bit rate easily
+for line in mediainfo.stdout: print(line)
 
 
 
