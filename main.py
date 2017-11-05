@@ -115,8 +115,11 @@ mediainfo = subprocess.Popen(['mediainfo', get_full_path(ex_snapchat_video)],
                      stderr=subprocess.PIPE)
 
 # TODO: Insert this into a array or hashmap, so we can access values such as bit rate easily
-for line in mediainfo.stdout: print(line)
-
+for line in mediainfo.stdout:
+    line_obj = line.decode("utf-8").split(':')
+    key = line_obj[0].strip()
+    print(line_obj.len) # Check the length here, if above 2 merge everything but first (as we performed an overzealous split)
+    # print(key)
 
 
 tag_dict = dict()
